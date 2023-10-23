@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import './MovieDetail.css'
 import { useParams } from 'react-router-dom';
 import { getOne } from '../../utils/Services/moviesRepository';
 import { Link } from 'react-router-dom';
+import logo from '../../assets/img/logo.png';
+import errorImage from '../../assets/svg/error.svg'
 
 const MovieDetail = ({ genres }) => {
   const [selectedMovie, setSelectedMovie] = useState({});
@@ -19,7 +22,15 @@ const MovieDetail = ({ genres }) => {
   }, [movieId]);
 
   return (
-
+    <div>
+      <div className='imgContainer'>
+          <img
+          src={logo}
+          alt="Logo de mi sitio web"
+          className="logo-detail"
+        /> 
+      </div>
+  
     <main>
       <div className="movie-card-detail">
         <div className="movie-detail">
@@ -33,6 +44,10 @@ const MovieDetail = ({ genres }) => {
               src={`https://image.tmdb.org/t/p/w200${selectedMovie.poster_path}`}
               alt={selectedMovie.title}
               className="movie-poster-detail"
+              onError={(e) => {
+                // En caso de error al cargar la imagen, muestra la imagen de reemplazo
+                e.target.src = errorImage;
+              }}
             />
           </div>
         </div>
@@ -63,6 +78,10 @@ const MovieDetail = ({ genres }) => {
                   src={`https://image.tmdb.org/t/p/w200${company.logo_path}`}
                   alt={company.name}
                   className="production-company-logo"
+                  onError={(e) => {
+                    // En caso de error al cargar la imagen, muestra la imagen de reemplazo
+                    e.target.src = errorImage;
+                  }}
                 />
               ))
             ) : (
@@ -72,6 +91,7 @@ const MovieDetail = ({ genres }) => {
         </div>
       </div>
     </main>
+  </div>
   );
 };
 

@@ -7,17 +7,15 @@ import OrderBy from '../OrderBy/OrderBy';
 import MovieFilter from '../MoviesFilter/MoviesFilter';
 import Paginacion from '../Paginacion/Paginacion';
 import { useMovies} from '../../utils/CustomHook/useMovies';
-import { useSortedList } from '../../utils/CustomHook/useSortedList';
+import { useMovieSorted } from '../../utils/CustomHook/useMovieSorted';
 import logo from '../../assets/img/logo.png';
 
 
 const MovieAdmin = () => {
  
-  const { movies, setMovies, currentPage, setCurrentPage, selectedGenre, setSelectedGenre } = useMovies();
-  const [selectedSortOption, setSelectedSortOption] = useState('all');
+  const { movies, setMovies, currentPage, setCurrentPage, selectedGenre, setSelectedGenre,selectedSortOption,setSelectedSortOption } = useMovies();
   const itemsPerPage = 20; 
   const [totalPages, setTotalPages] = useState(1);
-  const sortedList = useSortedList(movies, selectedSortOption);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
 
@@ -32,11 +30,10 @@ const MovieAdmin = () => {
           console.error(error);
         });
     }
-
- 
-  const handleSortOptionChange = (event) => {
-    setSelectedSortOption(event.target.value);
-  };
+    const handleSortOptionChange = (e) => {
+      const newSortOption = e.target.value;
+      setSelectedSortOption(newSortOption);
+    };
 
   return (
     <div>
@@ -63,14 +60,15 @@ const MovieAdmin = () => {
             <div className="side">
               <div className="filters">
               <MovieFilter
-                selectedGenre={selectedGenre} 
+                selectedGenre={selectedGenre}
                 setSelectedGenre={setSelectedGenre}
+                selectedSort={selectedSortOption}
+                setSelectedSort={setSelectedSortOption}
               /> 
-
-              <OrderBy 
-                selectedSortOption={selectedSortOption} 
-                handleSortOptionChange={handleSortOptionChange} 
-                />
+              <OrderBy
+                selectedSortOption={selectedSortOption}
+                handleSortOptionChange={handleSortOptionChange}
+              />
               </div>
             </div>
           <div className="movies">
@@ -80,7 +78,7 @@ const MovieAdmin = () => {
                 onPageChange={(newPage) => setCurrentPage(newPage)}
               />
               
-              <ListMovies movies={searchResults.length ? searchResults : sortedList} />
+              <ListMovies movies={searchResults.length ? searchResults : movies} />
 
 
               <Paginacion
